@@ -8,11 +8,15 @@
   <script type="module">
     import render from './lib/render.js';
 
+    // number of circles to render
     const circleCount = 20000;
+    // grid size for collision detection optimization
     const gridWidth = 70;
     const gridHeight = 120;
 
+    // position data (x1, y1, r1, x2, y2, r1, ...)
     const circleData = new Float32Array(circleCount * 3);
+    // velocity data (vx1, vy1, vx2, vy2, ...)
     const circlevData = new Float32Array(circleCount * 2);
 
     function detectCircleCollision (x1, y1, r1, x2, y2, r2) {
@@ -27,6 +31,7 @@
     function init (displayWidth, displayHeight) {
       for (let i = 0, iv = 0; i < circleData.length; i += 3, iv += 2) {
         let collision, x, y, r;
+        // loop to ensure we don't place circles overlapping
         do {
           collision = false;
           x = displayWidth * Math.random();
@@ -64,6 +69,7 @@
     const grid = [];
 
     function timeStep (displayWidth, displayHeight) {
+      // initialize the grid
       for (let p = 0; p < gridWidth; p++) {
         const col = grid[p] = [];
         for (let q = 0; q < gridHeight; q++) {
@@ -95,6 +101,7 @@
         circlevData[iv] = vxi;
         circlevData[iv + 1] = vyi;
 
+        // detect grid cell range for each circle
         let leftCol = Math.floor((xi - ri) / displayWidth * gridWidth);
         let rightCol = Math.floor((xi + ri) / displayWidth * gridWidth);
         let topRow = Math.floor((yi - ri) / displayHeight * gridHeight);
@@ -109,6 +116,7 @@
         if (bottomRow >= gridHeight)
           bottomRow = gridHeight - 1;
 
+        // assign each circle to its grid cell range
         for (let p = leftCol; p <= rightCol; p++) {
           const col = grid[p];
           for (let q = topRow; q <= bottomRow; q++) {
@@ -125,6 +133,7 @@
         for (let q = 0; q < gridHeight; q++) {
           const cell = col[q];
 
+          // loop through each circle in each grid cell
           for (let k = 0; k < cell.length; k++) {
             const i = cell[k];
             const iv = i / 3 * 2;
@@ -136,6 +145,7 @@
             let vxi = circlevData[iv];
             let vyi = circlevData[iv + 1];
 
+            // check for collisions with every other circle in the grid cell
             for (let l = k + 1; l < cell.length; l++) {
               const j = cell[l];
               const jv = j / 3 * 2;

@@ -6,19 +6,25 @@
         style="width: 100vw; height: 100vh; display:block;"></canvas>
   </body>
   <script type="module">
-    import render from './lib/render.js';
+    import render from 'https://cdn.rawgit.com/guybedford/wasm-demo/375e40b1/lib/render.js';
 
+    // number of circles to render
     const circleCount = 1000;
 
+    // position data (x1, y1, r1, x2, y2, r1, ...)
     const circleData = new Float32Array(3 * circleCount);
+    // velocity data (vx1, vy1, vx2, vy2, ...)
     const circlevData = new Float32Array(2 * circleCount);
 
     function init (displayWidth, displayHeight) {
       for (let i = 0, iv = 0; i < circleData.length; i += 3, iv += 2) {
+        // set random position
         circleData[i] = displayWidth * Math.random();
         circleData[i + 1] = displayHeight * Math.random();
+        // radius of 5
         circleData[i + 2] = 5;
 
+        // set a random velocity of -0.01 - 0.01 pixels / frame
         circlevData[iv] = (Math.random() - 0.5) * 0.01;
         circlevData[iv + 1] = (Math.random() - 0.5) * 0.01;
       }
@@ -32,9 +38,11 @@
         const vx = circlevData[iv];
         const vy = circlevData[iv + 1];
 
+        // move position based on the velocity
         circleData[i] = x + vx;
         circleData[i + 1] = y + vy;
 
+        // if we hit the wall bounds, reverse the velocity value
         if (x + r > displayWidth && vx > 0 || x - r < 0 && vx < 0)
           circlevData[iv] = -vx;
         if (y + r > displayHeight && vy > 0 || y - r < 0 && vy < 0)

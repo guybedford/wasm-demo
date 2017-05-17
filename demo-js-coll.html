@@ -8,9 +8,12 @@
   <script type="module">
     import render from './lib/render.js';
 
+    // number of circles to render
     const circleCount = 2000;
 
+    // position data (x1, y1, r1, x2, y2, r1, ...)
     const circleData = new Float32Array(circleCount * 3);
+    // velocity data (vx1, vy1, vx2, vy2, ...)
     const circlevData = new Float32Array(circleCount * 2);
 
     function detectCircleCollision (x1, y1, r1, x2, y2, r2) {
@@ -25,6 +28,7 @@
     function init (displayWidth, displayHeight) {
       for (let i = 0, iv = 0; i < circleData.length; i += 3, iv += 2) {
         let collision, x, y, r;
+        // loop to ensure we don't place circles overlapping
         do {
           collision = false;
           x = displayWidth * Math.random();
