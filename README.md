@@ -13,10 +13,9 @@ __Due to the use of ES Modules and WebGL 2, these demos are currently only suppo
 
 ### Build
 
-With the Web Assembly prerequisites installed and located in the path,
-build can be run with `make`.
+`make` is structured assuming `../llvm-wasm/bin/clang`, `../binaryen/bin/s2wast` and `../wabt/out/wast2wasm` executables.
 
-See the setup lessons for installing LLVM, Binaryen and WABT.
+See the setup lessons for a direct install command, and for installing LLVM, Binaryen and WABT.
 
 #### License
 
