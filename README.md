@@ -4,12 +4,12 @@ Course examples from the Introduction to Web Assembly egghead.io course.
 
 __Due to the use of ES Modules and WebGL 2, these demos are currently only supported in Chrome Canary with the Experimental JavaScript flag enabled from chrome://flags.__
 
-1. [demo-js.html](demo-js.html): Introduction to the renderer.
-2. [demo-wasm.html](demo-wasm.html): Used in the JS to WASM conversion step-by-step example.
-3. [demo-js-coll.html](demo-js-coll.html): Includes collisions between circles.
-4. [demo-wasm-coll.html](demo-wasm-coll.html): Used to compare performance between JS and WASM.
-5. [demo-js-opt.html](demo-js-opt.html): Optimized grid-based collision algorithm.
-6. [demo-wasm-opt.html](demo-wasm-opt.html): Web Assembly conversion demonstrating the faster-performing grid of linked-lists.
+1. [demo-js.html](https://plnkr.co/edit/FFN9MY6gcpnh3PPR0Qya?p=preview): Introduction to the renderer.
+2. [demo-wasm.html](https://plnkr.co/edit/V14384GNZsGtwZJZNt1O?p=preview): Used in the JS to WASM conversion step-by-step example.
+3. [demo-js-coll.html](https://plnkr.co/edit/DI8imAG2fpKwqqAMxqWS?p=preview): Includes collisions between circles.
+4. [demo-wasm-coll.html](https://plnkr.co/edit/cN4q3f6EdCCSpM8U1MV3?p=preview): Used to compare performance between JS and WASM.
+5. [demo-js-opt.html](https://plnkr.co/edit/HjBosWsN4YNi8M1cJt7h?p=preview): Optimized grid-based collision algorithm.
+6. [demo-wasm-opt.html](https://plnkr.co/edit/jsMi5oltGnT0Jn38js3v?p=preview): Web Assembly conversion demonstrating the faster-performing grid of linked-lists.
 
 ### Build
 
