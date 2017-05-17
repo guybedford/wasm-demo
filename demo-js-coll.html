@@ -9,7 +9,8 @@
     import render from './lib/render.js';
 
     // number of circles to render
-    const circleCount = 2000;
+    // (reduced to 1000 for init performance)
+    const circleCount = 1000;
 
     // position data (x1, y1, r1, x2, y2, r1, ...)
     const circleData = new Float32Array(circleCount * 3);

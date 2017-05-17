@@ -2,7 +2,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#define CIRCLE_COUNT 20000
+// reduced to 10000 for init performance
+#define CIRCLE_COUNT 10000
 #define GRID_WIDTH 70
 #define GRID_HEIGHT 120
 

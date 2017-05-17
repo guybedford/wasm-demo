@@ -1,7 +1,8 @@
 #include <math.h>
 #include <stdbool.h>
 
-#define CIRCLE_COUNT 2000
+// (reduced to 1000 for init performance)
+#define CIRCLE_COUNT 1000
 
 float randomf ();
 float expf (float);
