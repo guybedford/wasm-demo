@@ -1,0 +1,46 @@
+<!doctype html>
+  <meta charset="utf-8">
+  <title>JS Collision Demo</title>
+  <body style="margin:0; overflow: hidden">
+    <canvas id="canvas"
+        style="width: 100vw; height: 100vh; display:block;"></canvas>
+  </body>
+  <script type="module">
+    import render from './lib/render.js';
+
+    const circleCount = 1000;
+
+    const circleData = new Float32Array(3 * circleCount);
+    const circlevData = new Float32Array(2 * circleCount);
+
+    function init (displayWidth, displayHeight) {
+      for (let i = 0, iv = 0; i < circleData.length; i += 3, iv += 2) {
+        circleData[i] = displayWidth * Math.random();
+        circleData[i + 1] = displayHeight * Math.random();
+        circleData[i + 2] = 5;
+
+        circlevData[iv] = (Math.random() - 0.5) * 0.01;
+        circlevData[iv + 1] = (Math.random() - 0.5) * 0.01;
+      }
+    }
+
+    function timeStep (displayWidth, displayHeight) {
+      for (let i = 0, iv = 0; i < circleData.length; i += 3, iv += 2) {
+        const x = circleData[i];
+        const y = circleData[i + 1];
+        const r = circleData[i + 2];
+        const vx = circlevData[iv];
+        const vy = circlevData[iv + 1];
+
+        circleData[i] = x + vx;
+        circleData[i + 1] = y + vy;
+
+        if (x + r > displayWidth && vx > 0 || x - r < 0 && vx < 0)
+          circlevData[iv] = -vx;
+        if (y + r > displayHeight && vy > 0 || y - r < 0 && vy < 0)
+          circlevData[iv + 1] = -vy;
+      }
+    }
+
+    render(circleData, circleCount, init, timeStep);
+  </script>

@@ -1,0 +1,36 @@
+<!doctype html>
+  <title>WASM Collision Demo</title>
+  <body style="margin:0; overflow: hidden">
+    <canvas id="canvas" style="width: 100vw; height: 100vh; display:block;"></canvas>
+  </body>
+  <script type="module">
+    import render from './lib/render.js';
+
+    function fetchAndInstantiateWasm (source, importObj) {
+      return fetch(source)
+      .then(response => {
+        if (response.ok)
+          return response.arrayBuffer();
+        throw new Error(`Unable to fetch wasm ${source}.`)
+      })
+      .then(WebAssembly.compile)
+      .then(module => {
+        let instance = new WebAssembly.Instance(module, importObj);
+        return instance.exports;
+      });
+    }
+
+    fetchAndInstantiateWasm('./lib/dynamics-coll.wasm', {
+      env: {
+        randomf: Math.random,
+        expf: Math.exp
+      }
+    }).then(m => {
+      const circleCount = m.getCircleCount();
+      const circleDataOffset = m.getCircleDataOffset();
+
+      const circleData = new Float32Array(m.memory.buffer, circleDataOffset, circleCount * 3);
+
+      render(circleData, circleCount, m.init, m.timeStep);
+    });
+  </script>

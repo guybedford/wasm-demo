@@ -1,0 +1,193 @@
+<!doctype html>
+  <meta charset="utf-8">
+  <title>JS Collision Demo</title>
+  <body style="margin:0; overflow: hidden">
+    <canvas id="canvas"
+        style="width: 100vw; height: 100vh; display:block;"></canvas>
+  </body>
+  <script type="module">
+    import render from './lib/render.js';
+
+    const circleCount = 20000;
+    const gridWidth = 70;
+    const gridHeight = 120;
+
+    const circleData = new Float32Array(circleCount * 3);
+    const circlevData = new Float32Array(circleCount * 2);
+
+    function detectCircleCollision (x1, y1, r1, x2, y2, r2) {
+      // before circle intersection, check bounding box intersection
+      if (x1 + r1 < x2 - r2 || x1 - r1 > x2 + r2 ||
+          y1 + r1 < y2 - r2 || y1 - r1 > y2 + r2)
+        return false;
+      // circle intersection when distance between centers < radius total
+      return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)) <= r1 + r2;
+    }
+
+    function init (displayWidth, displayHeight) {
+      for (let i = 0, iv = 0; i < circleData.length; i += 3, iv += 2) {
+        let collision, x, y, r;
+        do {
+          collision = false;
+          x = displayWidth * Math.random();
+          y = displayHeight * Math.random();
+          // size of 0.5 - 128, exponentially distributed (maximum gl_POINT render size)
+          r = Math.ceil(Math.exp(Math.random() * 8) / 23.2887);
+
+          // ensure within window bounds
+          if (displayWidth - (x + r) < 0 || x - r < 0 ||
+              displayHeight - (y + r) < 0 || y - r < 0) {
+            collision = true;
+          }
+          else {
+            // ensure no collisions for starting position
+            for (let j = 0; j < i; j += 3) {
+              if (detectCircleCollision(x, y, r, circleData[j], circleData[j + 1], circleData[j + 2])) {
+                collision = true;
+                break;
+              }
+            }
+          }
+        }
+        while (collision);
+
+        circleData[i] = x;
+        circleData[i + 1] = y;
+        circleData[i + 2] = r;
+
+        // velocity of -0.1 - +0.1 pixels / iteration
+        circlevData[iv] = (Math.random() - 0.5) * 0.1;
+        circlevData[iv + 1] = (Math.random() - 0.5) * 0.1;
+      }
+    }
+
+    const grid = [];
+
+    function timeStep (displayWidth, displayHeight) {
+      for (let p = 0; p < gridWidth; p++) {
+        const col = grid[p] = [];
+        for (let q = 0; q < gridHeight; q++) {
+          col[q] = [];
+        }
+      }
+
+      for (let i = 0, iv = 0; i < circleData.length; i += 3, iv += 2) {
+        const xi = circleData[i];
+        const yi = circleData[i + 1];
+        const ri = circleData[i + 2];
+
+        let vxi = circlevData[iv];
+        let vyi = circlevData[iv + 1];
+
+        // gravity
+        vyi += 0.0001;
+
+        // window bounds
+        if (displayWidth - (xi + ri) < 0 && vxi > 0 || xi - ri < 0 && vxi < 0) {
+          vxi = -vxi;
+        }
+        if (displayHeight - (yi + ri) < 0 && vyi > 0 || yi - ri < 0 && vyi < 0) {
+          vyi = -vyi;
+        }
+
+        circleData[i] = xi + vxi;
+        circleData[i + 1] = yi + vyi;
+        circlevData[iv] = vxi;
+        circlevData[iv + 1] = vyi;
+
+        let leftCol = Math.floor((xi - ri) / displayWidth * gridWidth);
+        let rightCol = Math.floor((xi + ri) / displayWidth * gridWidth);
+        let topRow = Math.floor((yi - ri) / displayHeight * gridHeight);
+        let bottomRow = Math.floor((yi + ri) / displayHeight * gridHeight);
+
+        if (leftCol < 0)
+          leftCol = 0;
+        if (rightCol >= gridWidth)
+          rightCol = gridWidth - 1;
+        if (topRow < 0)
+          topRow = 0;
+        if (bottomRow >= gridHeight)
+          bottomRow = gridHeight - 1;
+
+        for (let p = leftCol; p <= rightCol; p++) {
+          const col = grid[p];
+          for (let q = topRow; q <= bottomRow; q++) {
+            col[q].push(i);
+          }
+        }
+      }
+
+      /*
+       * Collision detection
+       */
+      for (let p = 0; p < gridWidth; p++) {
+        const col = grid[p];
+        for (let q = 0; q < gridHeight; q++) {
+          const cell = col[q];
+
+          for (let k = 0; k < cell.length; k++) {
+            const i = cell[k];
+            const iv = i / 3 * 2;
+
+            const xi = circleData[i];
+            const yi = circleData[i + 1];
+            const ri = circleData[i + 2];
+
+            let vxi = circlevData[iv];
+            let vyi = circlevData[iv + 1];
+
+            for (let l = k + 1; l < cell.length; l++) {
+              const j = cell[l];
+              const jv = j / 3 * 2;
+
+              const xj = circleData[j];
+              const yj = circleData[j + 1];
+              const rj = circleData[j + 2];
+
+              if (detectCircleCollision(xi, yi, ri, xj, yj, rj)) {
+                const vxj = circlevData[jv];
+                const vyj = circlevData[jv + 1];
+
+                // calculate collision unit vector
+                let collDx = xj - xi;
+                let collDy = yj - yi;
+                const collLen = Math.sqrt(collDx * collDx + collDy * collDy);
+                collDx = collDx / collLen;
+                collDy = collDy / collLen;
+
+                // dot product of unit collision vector with velocity vector gives
+                // 1d collision velocities before collision along collisionv vector
+                const cui = collDx * vxi + collDy * vyi;
+                const cuj = collDx * vxj + collDy * vyj;
+
+                // skip collision if moving away from eachother
+                if (cui - cuj <= 0)
+                  continue;
+
+                // we then use 1d elastic collision equations
+                // to get resultant 1d velocities after collision
+                // (https://en.wikipedia.org/wiki/Elastic_collision)
+                const massSum = ri + rj;
+                const massDiff = ri - rj;
+                const cvi = (cui * massDiff + 2 * rj * cuj) / massSum;
+                const cvj = (2 * ri * cui - cuj * massDiff) / massSum;
+
+                // calculate the collision velocity change
+                const dcvi = cvi - cui;
+                const dcvj = cvj - cuj;
+
+                // apply that velocity change dotted with the collision unit vector
+                // to the original velocities
+                circlevData[iv] = vxi + collDx * dcvi;
+                circlevData[iv + 1] = vyi + collDy * dcvi;
+                circlevData[jv] = vxj + collDx * dcvj;
+                circlevData[jv + 1] = vyj + collDy * dcvj;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    render(circleData, circleCount, init, timeStep);
+  </script>
