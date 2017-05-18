@@ -7,13 +7,13 @@ lib/dynamics.wasm:
 	@../wabt/out/wast2wasm native/demo.wast -o lib/dynamics.wasm
 
 lib/dynamics-coll.wasm:
-	@../llvm-wasm/bin/clang -S --target=wasm32 -Oz -Wno-logical-op-parentheses native/demo-coll.c -c -o native/demo-coll.s -I../wasmc-hack/include
+	@../llvm-wasm/bin/clang -S --target=wasm32 -Oz -Wno-logical-op-parentheses native/demo-coll.c -c -o native/demo-coll.s -I../wasm-stdlib-hack/include/libc
 	@../binaryen/bin/s2wasm native/demo-coll.s > native/demo-coll.wast
 	@rm native/demo-coll.s
 	@../wabt/out/wast2wasm native/demo-coll.wast -o lib/dynamics-coll.wasm
 
 lib/dynamics-opt.wasm:
-	@../llvm-wasm/bin/clang -S --target=wasm32 -Oz -Wno-logical-op-parentheses native/demo-opt.c -c -o native/demo-opt.s -I../wasmc-hack/include
+	@../llvm-wasm/bin/clang -S --target=wasm32 -Oz -Wno-logical-op-parentheses native/demo-opt.c -c -o native/demo-opt.s -I../wasm-stdlib-hack/include/libc
 	@../binaryen/bin/s2wasm native/demo-opt.s > native/demo-opt.wast
 	@rm native/demo-opt.s
 	@../wabt/out/wast2wasm native/demo-opt.wast -o lib/dynamics-opt.wasm
