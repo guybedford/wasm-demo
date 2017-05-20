@@ -1,6 +1,6 @@
-### Examples: Introduction to Web Assembly
+### Demo Project: Introduction to Web Assembly
 
-Course examples from the Introduction to Web Assembly egghead.io course.
+Demo project from the Introduction to Web Assembly egghead.io course.
 
 __Due to the use of ES Modules and WebGL 2, these demos are currently only supported in Chrome Canary with the Experimental JavaScript flag enabled from chrome://flags.__
 
