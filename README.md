@@ -2,7 +2,7 @@
 
 Demo project from the Introduction to Web Assembly egghead.io course.
 
-__Due to the use of ES Modules and WebGL 2, these demos are currently only supported in Chrome Canary with the Experimental JavaScript flag enabled from chrome://flags.__
+__Due to the use of ES Modules and WebGL 2, these demos are currently only supported in Chrome Canary with the [Experimental Web Platform Flag](chrome://flags/#enable-experimental-web-platform-features) enabled from chrome://flags.__
 
 1. [demo-js.html](https://embed.plnkr.co/FFN9MY6gcpnh3PPR0Qya?autoCloseSidebar=true): Introduction to the renderer.
 2. [demo-wasm.html](https://embed.plnkr.co/V14384GNZsGtwZJZNt1O?autoCloseSidebar=true&show=demo.c,index.html,preview): Used in the JS to WASM conversion step-by-step example.

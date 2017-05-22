@@ -6,18 +6,16 @@
   <script type="module">
     import render from './lib/render.js';
 
-    function fetchAndInstantiateWasm (source, importObj) {
-      return fetch(source)
-      .then(response => {
-        if (response.ok)
-          return response.arrayBuffer();
-        throw new Error(`Unable to fetch wasm ${source}.`)
+    function fetchAndInstantiateWasm (url, imports) {
+      return fetch(url)
+      .then(res => {
+        if (res.ok)
+          return res.arrayBuffer();
+        throw new Error(`Unable to fetch Web Assembly file ${url}.`);
       })
-      .then(WebAssembly.compile)
-      .then(module => {
-        let instance = new WebAssembly.Instance(module, importObj);
-        return instance.exports;
-      });
+      .then(bytes => WebAssembly.compile(bytes))
+      .then(module => WebAssembly.instantiate(module, imports || {}))
+      .then(instance => instance.exports);
     }
 
     fetchAndInstantiateWasm('./lib/dynamics-coll.wasm', {
