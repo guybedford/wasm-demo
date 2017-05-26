@@ -1,6 +1,6 @@
-### Demo Project: Introduction to Web Assembly
+### Demo Project: Introduction to WebAssembly
 
-Demo project from the Introduction to Web Assembly egghead.io course.
+Demo project from the Introduction to WebAssembly egghead.io course.
 
 __Due to the use of ES Modules and WebGL 2, these demos are currently only supported in Chrome Canary with the [Experimental Web Platform Flag](chrome://flags/#enable-experimental-web-platform-features) enabled from chrome://flags.__
 
@@ -9,7 +9,7 @@ __Due to the use of ES Modules and WebGL 2, these demos are currently only suppo
 3. [demo-js-coll.html](https://embed.plnkr.co/DI8imAG2fpKwqqAMxqWS?autoCloseSidebar=true): Includes collisions between circles.
 4. [demo-wasm-coll.html](https://embed.plnkr.co/cN4q3f6EdCCSpM8U1MV3?autoCloseSidebar=true&show=demo-coll.c,preview): Used to compare performance between JS and WASM.
 5. [demo-js-opt.html](https://embed.plnkr.co/HjBosWsN4YNi8M1cJt7h?autoCloseSidebar=true): Optimized grid-based collision algorithm.
-6. [demo-wasm-opt.html](https://embed.plnkr.co/jsMi5oltGnT0Jn38js3v?autoCloseSidebar=true&show=demo-opt.c,preview): Web Assembly conversion demonstrating the faster-performing grid of linked-lists.
+6. [demo-wasm-opt.html](https://embed.plnkr.co/jsMi5oltGnT0Jn38js3v?autoCloseSidebar=true&show=demo-opt.c,preview): WebAssembly conversion demonstrating the faster-performing grid of linked-lists.
 
 ### Build
 
